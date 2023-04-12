@@ -1,9 +1,24 @@
+import { Canvas } from "@react-three/fiber"
+import { Sky } from "@react-three/drei"
+import {Physics} from '@react-three/cannon'
+
+//components
+import FPV from "./components/FPV"
+import Ground from "./components/Ground"
+
 function App() {
 
   return (
-    <div className="">
-
-    </div>
+    <>
+      <Canvas>
+        <Sky sunPosition={[100, 100, 20]} />
+        <ambientLight intensity={0.5} />
+        <FPV />
+        <Physics>
+          <Ground />
+        </Physics>
+      </Canvas>
+    </>
   )
 }
 
