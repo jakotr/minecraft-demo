@@ -5,6 +5,7 @@ import {Physics} from '@react-three/cannon'
 //components
 import FPV from "./components/FPV"
 import Ground from "./components/Ground"
+import Player from "./components/Player"
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
         <FPV />
         <Physics>
           <Ground />
+          <Player />
         </Physics>
       </Canvas>
     </>
