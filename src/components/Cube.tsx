@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { useBox } from "@react-three/cannon";
-import { NearestFilter } from "three";
+import { ThreeEvent } from "@react-three/fiber";
+import { Mesh } from "three";
 
-//cube extures
+//cube textures
 import * as textures from "../assets/images/textures";
 
-//store 
+//store
 import useStore from "../hooks/useStore";
 
-const Cube = ({ position, texture }) => {
+type CubeProps = {
+  position: [x: number, y: number, z: number];
+  texture: string;
+};
+
+const Cube = ({ position, texture }: CubeProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const [ref] = useBox(() => ({
+  const [ref] = useBox<Mesh>(() => ({
     type: "Static",
     position,
   }));
@@ -21,10 +27,11 @@ const Cube = ({ position, texture }) => {
     state.removeCube,
   ]);
 
-  const handleCubeFace = (face, e) => {
-    const { x, y, z } = ref.current.position;
+  const handleCubeFace = (face: number, e: ThreeEvent<MouseEvent>) => {
+    const { x, y, z } =
+      ref.current !== null ? ref.current.position : { x: 0, y: 0, z: 0 };
+
     if (e.altKey) {
-      console.log("alllt");
       removeCube(x, y, z);
     } else {
       switch (face) {
@@ -52,8 +59,8 @@ const Cube = ({ position, texture }) => {
     }
   };
 
-  const activeTexture = textures[texture + "Texture"];
-  //poprawa filtra tekstury (by była pikseloaza)
+  const activeTexture =
+    textures[(texture + "Texture") as keyof typeof textures];
 
   return (
     <mesh
@@ -68,18 +75,19 @@ const Cube = ({ position, texture }) => {
       ref={ref}
       onClick={(e) => {
         e.stopPropagation();
-        const clickedFace = Math.floor(e.faceIndex / 2);
-        console.log(clickedFace);
-        handleCubeFace(clickedFace, e);
+        if (e.faceIndex) {
+          const clickedFace = Math.floor(e.faceIndex / 2);
+          handleCubeFace(clickedFace, e);
+        }
       }}
     >
-      <boxBufferGeometry attach="geometry" />
+      <boxGeometry attach="geometry" />
       <meshStandardMaterial
         map={activeTexture}
         attach="material"
         color={isHovered ? "grey" : "white"}
-        transparent = {true}
-        opacity={texture === 'glass' ? .7 : 1}
+        transparent={true}
+        opacity={texture === "glass" ? 0.7 : 1}
       />
     </mesh>
   );

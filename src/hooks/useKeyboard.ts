@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-function actionByKey(key) {
+function actionByKey(key: string) {
   const keyActionMap = {
     KeyW: "moveForward",
     KeyS: "moveBackward",
@@ -14,7 +14,7 @@ function actionByKey(key) {
     Digit5: "log",
   };
 
-  return keyActionMap[key];
+  return keyActionMap[key as keyof typeof keyActionMap];
 }
 
 const useKeyboard = () => {
@@ -31,7 +31,7 @@ const useKeyboard = () => {
     log: false,
   });
 
-  const handleKeyDown = useCallback((e) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const action = actionByKey(e.code);
     if (action) {
       setActions((prev) => {
@@ -43,7 +43,7 @@ const useKeyboard = () => {
     }
   }, []);
 
-  const handleKeyUp = useCallback((e) => {
+  const handleKeyUp = useCallback((e: KeyboardEvent) => {
     const action = actionByKey(e.code);
     if (action) {
       setActions((prev) => {

@@ -1,3 +1,4 @@
+import { Mesh } from "three";
 import { usePlane } from "@react-three/cannon";
 import { NearestFilter, RepeatWrapping } from "three";
 
@@ -8,7 +9,7 @@ import useStore from "../hooks/useStore";
 import { groundTexture } from "../assets/images/textures";
 
 const Ground = () => {
-  const [ref] = usePlane(() => ({
+  const [ref] = usePlane<Mesh>(() => ({
     rotation: [-Math.PI / 2, 0, 0], //-Math.PI / 2 => -90deg
     position: [0, -0.5, 0],
   }));
@@ -25,11 +26,11 @@ const Ground = () => {
       ref={ref}
       onClick={(e) => {
         e.stopPropagation;
-        const [x, y, z] = Object.values(e.point).map(v => Math.ceil(v));
-        addCube(x, y, z)
+        const [x, y, z] = Object.values(e.point).map((v) => Math.ceil(v));
+        addCube(x, y, z);
       }}
     >
-      <planeBufferGeometry attach="geometry" args={[100, 100]} />
+      <planeGeometry attach="geometry" args={[100, 100]} />
       <meshStandardMaterial attach="material" map={groundTexture} />
     </mesh>
   );

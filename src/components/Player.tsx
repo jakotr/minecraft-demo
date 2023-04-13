@@ -1,7 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useSphere } from "@react-three/cannon";
 import { useEffect, useRef } from "react";
-import { Vector3 } from "three";
+import { Vector3, Mesh } from "three";
 
 //hooks
 import useKeyboard from "../hooks/useKeyboard";
@@ -18,7 +18,7 @@ const Player = () => {
   const { camera } = useThree();
 
   //kolo - obiekt player
-  const [ref, api] = useSphere(() => ({
+  const [ref, api] = useSphere<Mesh>(() => ({
     mass: 1,
     type: "Dynamic",
     position: [0, 2, 0],
@@ -56,15 +56,23 @@ const Player = () => {
     );
 
     //Wektor do prouszania się w lewo i prawo
-    const sideVector = new Vector3((moveLeft ? 1 : 0) - (moveRight ? 1 : 0), 0, 0);
+    const sideVector = new Vector3(
+      (moveLeft ? 1 : 0) - (moveRight ? 1 : 0),
+      0,
+      0
+    );
 
-    direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(SPEED).applyEuler(camera.rotation);
+    direction
+      .subVectors(frontVector, sideVector)
+      .normalize()
+      .multiplyScalar(SPEED)
+      .applyEuler(camera.rotation);
 
-    api.velocity.set(direction.x, yVel, direction.z)
+    api.velocity.set(direction.x, yVel, direction.z);
 
     //skok
     //TODO bug ze skokiem
-    if (jump && Math.abs(yVel < 0.05)) {
+    if (jump && Math.abs(+(yVel < 0.05))) {
       api.velocity.set(xVel, JUMP_FORCE, zVel);
     }
   });

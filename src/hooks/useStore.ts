@@ -1,13 +1,30 @@
-import create from "zustand";
+import { create } from "zustand";
 import { nanoid } from "nanoid";
 
-const getLocalStorage = (key) => JSON.parse(window.localStorage.getItem(key));
-const setLocalStorage = (key, value) =>
+interface Cube {
+  key: string;
+  position: [x: number, y: number, z: number];
+  texture: string;
+}
+
+interface MCStore {
+  texture: string;
+  cubes: Cube[];
+  addCube: (x: number, y: number, z: number) => void;
+  removeCube: (x: number, y: number, z: number) => void;
+  setTexture: (texture: string) => void;
+  saveWorld: () => void;
+  resetWorld: () => void;
+}
+
+const getLocalStorage = (key: string) =>
+  JSON.parse(window.localStorage.getItem(key) || "");
+const setLocalStorage = (key: string, value: Cube[]) =>
   window.localStorage.setItem(key, JSON.stringify(value));
 
-const useStore = create((set) => ({
+const useStore = create<MCStore>()((set) => ({
   texture: "dirt",
-  cubes: getLocalStorage('cubes') || [],
+  cubes: getLocalStorage("cubes") || [],
   addCube: (x, y, z) => {
     set((prev) => ({
       cubes: [
@@ -34,15 +51,15 @@ const useStore = create((set) => ({
     }));
   },
   saveWorld: () => {
-    console.log('ttt')
     set((prev) => {
-      setLocalStorage('cubes', prev.cubes)
-    })
+      setLocalStorage("cubes", prev.cubes);
+      return prev;
+    });
   },
   resetWorld: () => {
     set(() => ({
-      cubes: []
-    }))
+      cubes: [],
+    }));
   },
 }));
 
