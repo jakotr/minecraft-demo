@@ -2,6 +2,8 @@
 
 This is an application built using React library and ThreeJS. The main goal of the project is to learn ThreeJS library and its capabilities. The app is a simple Minecraft-like demo, where users can move around and build basic blocks. The application is currently under development and more features will be added in the future.
 
+It only works on PC!
+
 ## Technologies Used
 - React
 - ThreeJS
