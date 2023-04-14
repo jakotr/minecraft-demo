@@ -17,14 +17,20 @@ interface MCStore {
   resetWorld: () => void;
 }
 
-const getLocalStorage = (key: string) =>
-  JSON.parse(window.localStorage.getItem(key) || "");
+const getLocalStorage = (key: string) => {
+  const localStorage = window.localStorage.getItem(key);
+  if (typeof localStorage === "string") {
+    return JSON.parse(localStorage);
+  }
+  
+  return [];
+};
 const setLocalStorage = (key: string, value: Cube[]) =>
   window.localStorage.setItem(key, JSON.stringify(value));
 
 const useStore = create<MCStore>()((set) => ({
   texture: "dirt",
-  cubes: getLocalStorage("cubes") || [],
+  cubes: getLocalStorage("cubes"),
   addCube: (x, y, z) => {
     set((prev) => ({
       cubes: [
